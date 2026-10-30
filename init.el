@@ -76,6 +76,9 @@
   :config
   (evil-collection-init))
 
+(use-package evil-commentary
+  :init (evil-commentary-mode 1))
+
 ; Modeline
 (use-package doom-modeline
   :init (doom-modeline-mode 1))
@@ -177,6 +180,31 @@
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.2))
+
+;; LSP Diagnostics
+(use-package flycheck
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  (lux/leader-keys
+    "lq" '(counsel-flycheck :which-key "Diagnostics")))
+
+;; LSP Odin
+(defun +odin-common-config (mode)
+  (set-formatter 'odinfmt '("odinfmt" "-stdin") :modes (list mode))
+  (when (modulep +lsp)
+    (add-hook (intern (format "%s-local-vars-hook" mode)) #'lsp 'append))
+  (map! :map ,(intern (format "%s-map" mode))
+        :localleader
+        "b" #'+odin/build
+        "t" #'+odin/test))
+
+
+(use-package odin-mode
+  :ensure nil
+  :mode ("\\.odin\\'" . odin-mode)
+  :vc (:url "https://github.com/mattt-b/odin-mode"
+       :rev :newest))
 
 ;; Terminal
 (use-package term
