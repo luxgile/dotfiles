@@ -44,6 +44,8 @@
   "hf" '(counsel-describe-function :which-key "Functions")
   "hv" '(counsel-describe-variable :which-key "Variable")
   "hs" '(counsel-describe-symbol :which-key "Symbol")
+  "b" '(:ignore t :which-key "Buffers")
+  "bb" '(counsel-buffer-or-recentf :which-key "Find buffers")
   "f" '(:ignore t :which-key "File")
   "fd" '(dired :which-key "Dired")
   "ff" '(counsel-find-file :which-key "Find file"))
@@ -89,6 +91,10 @@
 	 ("TAB" . ivy-alt-done))
   :config (ivy-mode 1))
 
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
 	 ("C-x b" . counsel-ibuffer)
@@ -120,14 +126,15 @@
   :diminish projectile-mode
   :custom ((projectile-completion-system 'ivy))
   :init
-  ;; NOTE: Set this to the folder where you keep your Git repos!
   (when (file-directory-p "/mnt/6f7e372e-8cd1-4f27-980d-5342a70722c5/dev")
     (setq projectile-project-search-path '("/mnt/6f7e372e-8cd1-4f27-980d-5342a70722c5/dev")))
   (setq projectile-switch-project-action #'projectile-dired)
   :config
   (lux/leader-keys
     "p" '(:ignore t :which-key "Projects")
-    "pp" '(counsel-projectile :which-key "Find projects"))
+    "pr" '(projectile-run-project :which-key "Run")
+    "pd" '(projectile-doctor :which-key "Doctor")
+    "pp" '(projectile-switch-project :which-key "Find"))
   (projectile-mode))
 
 (use-package counsel-projectile
@@ -139,3 +146,50 @@
   (lux/leader-keys
     "g" '(:ignore t :which-key "Magit")
     "gg" '(magit :which-key "Open Magit")))
+
+;; LSP
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((c-mode . lsp-deferred)
+	 (c++-mode . lsp-deferred))
+  :config
+  (lsp-enable-which-key-integration t)
+  (lux/leader-keys
+    "l" '(:keymap lsp-command-map :which-key "LSP"))
+  (setq lsp-clients-clangd-args
+	'("--background-index"
+	  "--clang-tidy"
+	  "--completion-style=detailed"
+	  "--header-insertion=never")))
+
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode))
+
+;; LSP Completion
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind
+  (:map company-active-map ("<tab>" . company-complete-selection))
+  (:map lsp-mode-map ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.2))
+
+;; Terminal
+(use-package term
+  :config
+  (setq explicit-shell-file-name "usr/bin/fish")
+  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *"))
+
+(use-package eterm-256color
+  :hook (term-mode . eterm-256color-mode))
+
+(use-package vterm
+  :commands vterm
+  :init
+  (setq vterm-shell "fish")
+  :config
+  (setq vterm-max-scrollback 10000))

@@ -49,3 +49,9 @@ flycheck_*.el
 
 # undo-tree
 *.~undo-tree~
+*.eln
+*.eld
+/.cache/
+/.lsp-session-v1
+/recentf
+/transient/
