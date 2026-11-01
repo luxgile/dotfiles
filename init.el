@@ -57,7 +57,7 @@
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
+  (setq evil-want-C-i-jump t)
   :config
   (evil-mode 1)
   (evil-set-undo-system 'undo-redo)
@@ -78,6 +78,16 @@
 
 (use-package evil-commentary
   :init (evil-commentary-mode 1))
+
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1)
+(evil-define-key 'visual evil-surround-mode-map
+    "sa" #'evil-surround-edit)
+  (evil-define-key 'normal evil-surround-mode-map
+    "sa" #'evil-surround-edit   
+    "sd" #'evil-surround-delete  
+    "sr" #'evil-surround-change)) 
 
 ; Modeline
 (use-package doom-modeline
@@ -125,6 +135,16 @@
   ([remap describe-key] . helpful-key))
 
 ; Projects
+(defun lux/open-emacs-directory ()
+  "Open the Emacs config directory using Dired."
+  (interactive)
+  (dired user-emacs-directory))
+
+(defun lux/open-org-directory ()
+  "Open the Emacs config directory using Dired."
+  (interactive)
+  (dired "~/org-files/"))
+
 (use-package projectile
   :diminish projectile-mode
   :custom ((projectile-completion-system 'ivy))
@@ -137,6 +157,8 @@
     "p" '(:ignore t :which-key "Projects")
     "pr" '(projectile-run-project :which-key "Run")
     "pd" '(projectile-doctor :which-key "Doctor")
+    "pe" '(lux/open-emacs-directory :which-key "Emacs project")
+    "pa" '(lux/open-org-directory :which-key "Emacs project")
     "pp" '(projectile-switch-project :which-key "Find"))
   (projectile-mode))
 
@@ -149,7 +171,7 @@
   (lux/leader-keys
     "g" '(:ignore t :which-key "Magit")
     "gg" '(magit :which-key "Open Magit")))
-
+  
 ;; LSP
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
@@ -165,7 +187,9 @@
 	'("--background-index"
 	  "--clang-tidy"
 	  "--completion-style=detailed"
-	  "--header-insertion=never")))
+	  "--header-insertion=never"
+	  "--pch-storage=memory"
+	  "--cross-file-rename")))
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode))
@@ -190,16 +214,6 @@
     "lq" '(counsel-flycheck :which-key "Diagnostics")))
 
 ;; LSP Odin
-(defun +odin-common-config (mode)
-  (set-formatter 'odinfmt '("odinfmt" "-stdin") :modes (list mode))
-  (when (modulep +lsp)
-    (add-hook (intern (format "%s-local-vars-hook" mode)) #'lsp 'append))
-  (map! :map ,(intern (format "%s-map" mode))
-        :localleader
-        "b" #'+odin/build
-        "t" #'+odin/test))
-
-
 (use-package odin-mode
   :ensure nil
   :mode ("\\.odin\\'" . odin-mode)
@@ -221,3 +235,16 @@
   (setq vterm-shell "fish")
   :config
   (setq vterm-max-scrollback 10000))
+
+;; Org mode
+(use-package org
+  :config
+  (setq org-table-automatic-realign t)
+  (setq org-default-notes-file
+	'("~/org-files/scratch.org"))
+  (setq org-agenda-files
+	'("~/org-files/scratch.org"))
+  (lux/leader-keys
+    "a" '(:ignore t :which-key "Agenda")
+    "aa" '(org-agenda :which-key "Agenda Menu")
+    "ac" '(org-capture :whick-key "Capture")))
