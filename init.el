@@ -1,5 +1,6 @@
 (setq inhibit-startup-screen t)
 (setq custom-file (locate-user-emacs-file "custom.el"))
+(setq backup-directory-alist '(("." . "~/.config/emacs/backups")))
 
 ; Minimalize ui
 (menu-bar-mode -1)
@@ -181,6 +182,7 @@
 	 (c++-mode . lsp-deferred))
   :config
   (lsp-enable-which-key-integration t)
+  (setq lsp-format-buffer-on-save t)
   (lux/leader-keys
     "l" '(:keymap lsp-command-map :which-key "LSP"))
   (setq lsp-clients-clangd-args
@@ -193,6 +195,13 @@
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode))
+
+;; LSP DAP
+(use-package dap-mode
+  :config
+  (require 'dap-lldb)
+  (require 'dap-cpptools)
+  (dap-auto-configure-mode 1)) 
 
 ;; LSP Completion
 (use-package company

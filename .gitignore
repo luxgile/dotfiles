@@ -56,3 +56,7 @@ flycheck_*.el
 /recentf
 /transient/
 /projects
+/.dap-breakpoints
+/.extension/
+/bookmarks
+*.tmp
