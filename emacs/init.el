@@ -81,9 +81,9 @@
   :init (evil-commentary-mode 1))
 
 (use-package evil-surround
+  :hook ((prog-mode text-mode conf-mode) . evil-surround-mode)
   :config
-  (global-evil-surround-mode 1)
-(evil-define-key 'visual evil-surround-mode-map
+  (evil-define-key 'visual evil-surround-mode-map
     "sa" #'evil-surround-edit)
   (evil-define-key 'normal evil-surround-mode-map
     "sa" #'evil-surround-edit   
@@ -150,8 +150,9 @@
   :diminish projectile-mode
   :custom ((projectile-completion-system 'ivy))
   :init
-  (when (file-directory-p "/mnt/6f7e372e-8cd1-4f27-980d-5342a70722c5/dev")
-    (setq projectile-project-search-path '("/mnt/6f7e372e-8cd1-4f27-980d-5342a70722c5/dev")))
+  ;; I prefer to manually add projects
+  ;; (when (file-directory-p "/mnt/6f7e372e-8cd1-4f27-980d-5342a70722c5/dev")
+  ;;   (setq projectile-project-search-path '("/mnt/6f7e372e-8cd1-4f27-980d-5342a70722c5/dev")))
   (setq projectile-switch-project-action #'projectile-dired)
   :config
   (lux/leader-keys
