@@ -1,6 +1,9 @@
 * Luxgile Dotfiles
 For now a place to store all my dotfiles. No way to easily install everything together as it's not something I usually do, but helps the convenience of storing all config on the same repo.
 
+** Dependencies
+- Iosevka Nerd Font
+
 ** Editors
 *** Emacs
 

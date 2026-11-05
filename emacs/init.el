@@ -224,11 +224,11 @@
     "lq" '(counsel-flycheck :which-key "Diagnostics")))
 
 ;; LSP Odin
-(use-package odin-mode
-  :ensure nil
-  :mode ("\\.odin\\'" . odin-mode)
-  :vc (:url "https://github.com/mattt-b/odin-mode"
-       :rev :newest))
+;; (use-package odin-mode
+;;   :ensure nil
+;;   :mode ("\\.odin\\'" . odin-mode)
+;;   :vc (:url "https://github.com/mattt-b/odin-mode"
+;;        :rev :newest))
 
 ;; Terminal
 (use-package term
