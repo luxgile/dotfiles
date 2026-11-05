@@ -86,7 +86,6 @@
   (evil-define-key 'visual evil-surround-mode-map
     "sa" #'evil-surround-edit)
   (evil-define-key 'normal evil-surround-mode-map
-    "sa" #'evil-surround-edit   
     "sd" #'evil-surround-delete  
     "sr" #'evil-surround-change)) 
 
